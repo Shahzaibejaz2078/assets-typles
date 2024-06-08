@@ -1,0 +1,68 @@
+Here's an extension of the previous implementation to include asset types:
+
+
+class Voucher:
+	def __init__(self, code, description, discount, asset_type):
+		self.code = code
+		self.description = description
+		self.discount = discount
+		self.asset_type = asset_type
+
+class Asset:
+	def __init__(self, name, asset_type, price):
+		self.name = name
+		self.asset_type = asset_type
+		self.price = price
+
+class Student:
+	def __init__(self, name, id):
+		self.name = name
+		(link unavailable) = id
+		self.vouchers = []
+		self.assets = []
+
+def create_voucher(code, description, discount, asset_type):
+	voucher = Voucher(code, description, discount, asset_type)
+	return voucher
+
+def assign_voucher(student, voucher):
+	student.vouchers.append(voucher)
+
+def redeem_voucher(student, voucher_code, asset):
+	for voucher in student.vouchers:
+		if voucher.code == voucher_code and voucher.asset_type == asset.asset_type:
+			student.assets.append(asset)
+			return voucher.discount
+	return "Voucher not found or invalid asset type"
+
+def purchase_asset(student, asset):
+	if asset.price <= sum(voucher.discount for voucher in student.vouchers if voucher.asset_type == asset.asset_type):
+		student.assets.append(asset)
+		return "Asset purchased successfully"
+	return "Insufficient vouchers or invalid asset type"
+
+# Example usage
+student1 = Student("John Doe", 123)
+
+voucher1 = create_voucher("VD1", "10% off book", 0.1, "book")
+voucher2 = create_voucher("VD2", "20% off laptop", 0.2, "laptop")
+
+assign_voucher(student1, voucher1)
+assign_voucher(student1, voucher2)
+
+book = Asset("Math textbook", "book", 100)
+laptop = Asset("Dell laptop", "laptop", 500)
+
+print(redeem_voucher(student1, "VD1", book))  # Output: 0.1
+print(purchase_asset(student1, book))       # Output: Asset purchased successfully
+print(purchase_asset(student1, laptop))     # Output: Insufficient vouchers or invalid asset type
+
+
+In this extended implementation:
+
+- I added an asset_type attribute to the Voucher class to specify the type of asset the voucher can be redeemed for.
+- I created an Asset class to represent assets with a name, asset type, and price.
+- I modified the redeem_voucher function to check if the voucher's asset type matches the asset being redeemed.
+- I added a purchase_asset function that allows students to purchase assets using their vouchers.
+
+This implementation allows you to assign vouchers to students, redeem vouchers for specific assets, and purchase assets using vouchers.
